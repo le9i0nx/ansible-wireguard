@@ -1,0 +1,41 @@
+---
+
+wireguard__headers_map:
+  'x86_64': "amd64"
+  'armv7l': "armmp-lpae"
+
+wireguard__dependencies_ferm: True
+
+wireguard__ferm_dependent_rules:
+
+  - type: 'accept'
+    dport: [ '1194' ]
+    protocol: [ 'tcp' ]
+    role: 'le9i0nx.wireguard'
+    name: 'tcp'
+    accept_any: True
+
+  - type: 'accept'
+    dport: [ '1194' ]
+    protocol: [ 'udp' ]
+    role: 'le9i0nx.wireguard'
+    name: 'udp'
+    accept_any: True
+
+wireguard__dependencies_apt_preferences: '{{ ((ansible_distribution_release == "jessie") or (ansible_distribution_release == "stretch")) | bool }}'
+
+wireguard__apt_preferences__dependent_list:
+
+  - package: '*'
+    by_role: 'le9i0nx.wireguard'
+    priority: '50'
+    pin: 'release sid'
+
+wireguard__dependencies_apt: '{{ (ansible_distribution_release == "jessie") | bool }}'
+
+wireguard__repositories:
+
+  - repo: 'deb http://deb.debian.org/debian unstable main contrib non-free'
+    mode: '0444'
+
+## vim: foldmethod=marker:tabstop=2:shiftwidth=2:softtabstop=2
