@@ -4,8 +4,9 @@ wireguard__headers_map:
   'x86_64': "amd64"
   'armv7l': "armmp-lpae"
 
-wireguard__dependencies_ferm: True
+wireguard__real_ip: '{{ ansible_local.real_ip }}'
 
+wireguard__dependencies_ferm: True
 wireguard__ferm_dependent_rules:
 
   - type: 'accept'
@@ -26,7 +27,6 @@ wireguard__ferm_dependent_rules:
     accept_any: True
 
 wireguard__dependencies_apt_preferences: '{{ ((ansible_distribution_release == "jessie") or (ansible_distribution_release == "stretch")) | bool }}'
-
 wireguard__apt_preferences__dependent_list:
 
   - package: '*'
@@ -35,7 +35,6 @@ wireguard__apt_preferences__dependent_list:
     pin: 'release sid'
 
 wireguard__dependencies_apt: '{{ (ansible_distribution_release == "jessie") | bool }}'
-
 wireguard__repositories:
 
   - repo: 'deb http://deb.debian.org/debian unstable main contrib non-free'
