@@ -9,14 +9,17 @@ wireguard__dependencies_ferm: True
 wireguard__ferm_dependent_rules:
 
   - type: 'accept'
-    dport: [ '1194' ]
-    protocol: [ 'tcp' ]
-    role: 'le9i0nx.wireguard'
-    name: 'tcp'
-    accept_any: True
-
-  - type: 'accept'
-    dport: [ '1194' ]
+    dport:
+      - '1100'
+      - '1101'
+      - '1102'
+      - '1103'
+      - '1104'
+      - '1105'
+      - '1106'
+      - '1107'
+      - '1108'
+      - '1109'
     protocol: [ 'udp' ]
     role: 'le9i0nx.wireguard'
     name: 'udp'
