@@ -1,5 +1,10 @@
 ---
 
+wireguard__server: "{{ groups['service_wireguard_server'] }}"
+wireguard__client: "{{ groups['service_wireguard_client'] }}"
+wireguard__network: "172.16.35.0/22"
+wireguard__hostname: "{{ inventory_hostname }}"
+
 wireguard__headers_map:
   'x86_64': "amd64"
   'armv7l': "armmp-lpae"

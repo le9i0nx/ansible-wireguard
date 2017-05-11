@@ -1,0 +1,16 @@
+{% for host_server in wireguard__server %}
+{%   set number_net = loop.index - 1 %}
+{%   for host_client in wireguard__client %}
+{%     set number_net = number_net + loop.index - 1 %}
+{%     if wireguard__hostname == host_server %}
+  - { net: "wg_{{ host_server }}_{{ host_client }}",
+      ip: "{{ wireguard__network | ipsubnet(31, number_net) | ipaddr('0') }}",
+    }
+{%     endif %}
+{%     if wireguard__hostname == host_client %}
+  - { net: "wg_{{ host_server }}_{{ host_client }}",
+      ip: "{{ wireguard__network | ipsubnet(31, number_net) | ipaddr('1') }}"
+    }
+{%     endif %}
+{%   endfor %}
+{% endfor %}

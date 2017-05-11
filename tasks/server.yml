@@ -1,0 +1,38 @@
+---
+
+- name: dir wireguard__server
+  file:
+    state: directory
+    path: "/etc/wireguard/wg_{{ wireguard__hostname }}_{{ item }}"
+    mode: 0700
+    owner: root
+    group: root
+  with_items: "{{ wireguard__client }}"
+  when: wireguard__hostname in wireguard__server
+
+- name: gen privatekey wireguard__server
+  shell: |
+    umask 077
+    wg genkey > privatekey
+    wg pubkey < privatekey > publickey
+  args:
+    chdir: "/etc/wireguard/wg_{{ wireguard__hostname }}_{{ item }}/"
+    creates: "/etc/wireguard/wg_{{ wireguard__hostname }}_{{ item }}/privatekey"
+  with_items: "{{ wireguard__client }}"
+  when: wireguard__hostname in wireguard__server
+
+- name: read publickey server
+  slurp:
+    src: "/etc/wireguard/wg_{{ wireguard__hostname }}_{{ item }}/publickey"
+  register: wireguard__publickey_server
+  with_items: "{{ wireguard__client }}"
+  when: wireguard__hostname in wireguard__server
+
+- name: read privatekey server
+  slurp:
+    src: "/etc/wireguard/wg_{{ wireguard__hostname }}_{{ item }}/privatekey"
+  register: wireguard__privatekey_server
+  with_items: "{{ wireguard__client }}"
+  when: wireguard__hostname in wireguard__server
+
+## vim: foldmethod=marker:tabstop=2:shiftwidth=2:softtabstop=2

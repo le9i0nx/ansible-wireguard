@@ -1,6 +1,8 @@
 ---
 
 - include: install.yml
+- include: server.yml
+- include: client.yml
 - include: config.yml
 
 ## vim: foldmethod=marker:tabstop=2:shiftwidth=2:softtabstop=2
