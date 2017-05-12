@@ -5,11 +5,36 @@
 {%     if wireguard__hostname == host_server %}
   - { net: "wg_{{ host_server }}_{{ host_client }}",
       ip: "{{ wireguard__network | ipsubnet(31, number_net) | ipaddr('0') }}",
+{%       for privatekey in wireguard__privatekey_server.results %}
+{%         if privatekey.item == host_client %}
+      privatekey: "{{ privatekey.stdout }}",
+{%         endif %}
+{%       endfor %}
+{%       if hostvars[host_client]|d() and hostvars[host_client].wireguard__publickey_client|d() %}
+{%         for publickey in hostvars[host_client].wireguard__publickey_client.results %}
+{%           if publickey.item == host_server %}
+      publickey: "{{ publickey.stdout }}",
+{%           endif %}
+{%         endfor %}
+{%       endif %}
     }
 {%     endif %}
 {%     if wireguard__hostname == host_client %}
   - { net: "wg_{{ host_server }}_{{ host_client }}",
-      ip: "{{ wireguard__network | ipsubnet(31, number_net) | ipaddr('1') }}"
+      ip: "{{ wireguard__network | ipsubnet(31, number_net) | ipaddr('1') }}",
+{%       for privatekey in wireguard__privatekey_client.results %}
+{%         if privatekey.item == host_server %}
+      privatekey: "{{ privatekey.stdout }}",
+{%         endif %}
+{%       endfor %}
+{%       if hostvars[host_server]|d() and hostvars[host_server].wireguard__publickey_server|d() %}
+{%         for publickey in hostvars[host_server].wireguard__publickey_server.results %}
+{%           if publickey.item == host_client %}
+      publickey: "{{ publickey.stdout }}",
+{%           endif %}
+{%         endfor %}
+{%       endif %}
+      endpoint: "",
     }
 {%     endif %}
 {%   endfor %}

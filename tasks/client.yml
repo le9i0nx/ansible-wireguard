@@ -22,16 +22,16 @@
   when: wireguard__hostname in wireguard__client
 
 - name: read publickey client
-  slurp:
-    src: "/etc/wireguard/wg_{{ item }}_{{ wireguard__hostname }}/publickey"
+  shell: cat "/etc/wireguard/wg_{{ item }}_{{ wireguard__hostname }}/publickey"
   register: wireguard__publickey_client
+  changed_when: False
   with_items: "{{ wireguard__server }}"
   when: wireguard__hostname in wireguard__client
 
 - name: read privatekey client
-  slurp:
-    src: "/etc/wireguard/wg_{{ item }}_{{ wireguard__hostname }}/privatekey"
+  shell: cat "/etc/wireguard/wg_{{ item }}_{{ wireguard__hostname }}/privatekey"
   register: wireguard__privatekey_client
+  changed_when: False
   with_items: "{{ wireguard__server }}"
   when: wireguard__hostname in wireguard__client
 
