@@ -10,6 +10,21 @@
     - 'wireguard-dkms'
     - 'wireguard-tools'
 
+- name: Enable systemd-networkd
+  service:
+    name: 'systemd-networkd'
+    state: started
+    enabled: yes
+
+- name: add wireguard@.service
+  template:
+    src: 'etc/systemd/system/wireguard@.service.j2'
+    dest: '/etc/systemd/system/wireguard@.service'
+  notify:
+    - reload systemd
+
+- meta: flush_handlers
+
 - name: Make sure that Ansible local facts directory exists
   file:
     path: '/etc/ansible/facts.d'

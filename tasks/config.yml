@@ -4,4 +4,43 @@
   set_fact:
     wireguard__wg_conf: '{{ lookup("template", "lookup/wg_conf.j2") | from_yaml }}'
 
+- name: gen template wg config
+  template:
+    src: 'etc/wireguard/wg.conf.j2'
+    dest: '/etc/wireguard/{{ item.net }}.conf'
+    owner: 'root'
+    group: 'root'
+    mode: '0600'
+  with_items: "{{ wireguard__wg_conf }}"
+  when: ((item.net is defined and item.net) and
+         (item.privatekey is defined and item.privatekey) and
+         (item.publickey is defined and item.publickey))
+  notify:
+    - wireguard restarted
+
+- name: register autostart service systemd
+  service:
+    name: 'wireguard@{{ item.net }}'
+    enabled: 'yes'
+  notify:
+    - wireguard restarted
+  with_items: "{{ wireguard__wg_conf }}"
+  when: ((item.net is defined and item.net) and
+         (item.privatekey is defined and item.privatekey) and
+         (item.publickey is defined and item.publickey))
+
+- name: Generate interface configuration
+  template:
+    src: 'etc/systemd/network/wg.network.j2'
+    dest: '/etc/systemd/network/{{ item.net }}.network'
+    owner: 'root'
+    group: 'root'
+    mode: '0644'
+  with_items: "{{ wireguard__wg_conf }}"
+  when: ((item.net is defined and item.net) and
+         (item.privatekey is defined and item.privatekey) and
+         (item.publickey is defined and item.publickey))
+  notify:
+    - wireguard apply networkd configuration
+
 ## vim: foldmethod=marker:tabstop=2:shiftwidth=2:softtabstop=2

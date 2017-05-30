@@ -2,7 +2,10 @@
 
 - include: install.yml
 - include: server.yml
+  no_log: True
 - include: client.yml
+  no_log: True
 - include: config.yml
+  no_log: True
 
 ## vim: foldmethod=marker:tabstop=2:shiftwidth=2:softtabstop=2

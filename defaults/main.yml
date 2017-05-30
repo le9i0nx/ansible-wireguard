@@ -3,6 +3,7 @@
 wireguard__server: "{{ groups['service_wireguard_server'] }}"
 wireguard__client: "{{ groups['service_wireguard_client'] }}"
 wireguard__network: "172.16.35.0/22"
+wireguard__port: 1100
 wireguard__hostname: "{{ inventory_hostname }}"
 
 wireguard__headers_map:
@@ -11,12 +12,13 @@ wireguard__headers_map:
 
 wireguard__real_ip: '{{ ansible_local.real_ip }}'
 
+
 wireguard__dependencies_ferm: True
 wireguard__ferm_dependent_rules:
 
   - type: 'accept'
     dport:
-      - '1100'
+      - '{{ wireguard__port }}'
       - '1101'
       - '1102'
       - '1103'
