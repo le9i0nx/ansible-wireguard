@@ -1,0 +1,49 @@
+---
+
+dependencies:
+
+    - role: debops.ferm
+      tags:
+        - 'depend::ferm'
+        - 'depend::ferm:wireguard'
+        - 'depend-of::wireguard'
+        - 'type::dependency'
+      ferm_dependent_rules:
+        - '{{ wireguard__ferm_dependent_rules }}'
+      when: wireguard__dependencies_ferm | bool
+
+    - role: debops.apt_preferences
+      tags:
+        - 'depend::apt_preferences'
+        - 'depend::apt_preferences:wireguard'
+        - 'depend-of::wireguard'
+        - 'type::dependency'
+      apt_preferences__group_list:
+        - '{{ wireguard__apt_preferences__dependent_list }}'
+      when: wireguard__dependencies_apt_preferences | bool
+
+    - role: debops.apt
+      tags:
+        - 'depend::apt'
+        - 'depend::apt:wireguard'
+        - 'depend-of::wireguard'
+        - 'type::dependency'
+      apt__host_repositories:
+        - '{{ wireguard__repositories }}'
+      when: wireguard__dependencies_apt | bool
+
+galaxy_info:
+  author: 'Aleksej Gavrilov'
+  description: 'Configure wireguard packages'
+  license: 'MIT'
+  min_ansible_version: '2.1.0'
+  platforms:
+  - name: Debian
+    versions:
+    - jessie
+    - stretch
+  categories:
+    - networking
+    - vpn
+
+## vim: foldmethod=marker:tabstop=2:shiftwidth=2:softtabstop=2

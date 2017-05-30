@@ -1,0 +1,46 @@
+{% for host_server in wireguard__server %}
+{%   set number_net = loop.index - 1 %}
+{%   for host_client in wireguard__client %}
+{%     set number_net = number_net + loop.index - 1 %}
+{%     set port_net = number_net + wireguard__port %}
+{%     if wireguard__hostname == host_server %}
+  - { net: "wg_{{ host_server }}_{{ host_client }}",
+      ip: "{{ wireguard__network | ipsubnet(30, number_net) | ipaddr('1') }}",
+      listenport: "{{ port_net }}",
+{%       for privatekey in wireguard__privatekey_server.results %}
+{%         if privatekey.item == host_client %}
+      privatekey: "{{ privatekey.stdout }}",
+{%         endif %}
+{%       endfor %}
+{%       if hostvars[host_client]|d() and hostvars[host_client].wireguard__publickey_client|d() %}
+{%         for publickey in hostvars[host_client].wireguard__publickey_client.results %}
+{%           if publickey.item == host_server %}
+      publickey: "{{ publickey.stdout }}",
+{%           endif %}
+{%         endfor %}
+{%       endif %}
+    }
+{%     endif %}
+{%     if wireguard__hostname == host_client %}
+  - { net: "wg_{{ host_server }}_{{ host_client }}",
+      ip: "{{ wireguard__network | ipsubnet(30, number_net) | ipaddr('2') }}",
+      listenport: "{{ port_net }}",
+{%       for privatekey in wireguard__privatekey_client.results %}
+{%         if privatekey.item == host_server %}
+      privatekey: "{{ privatekey.stdout }}",
+{%         endif %}
+{%       endfor %}
+{%       if hostvars[host_server]|d() and hostvars[host_server].wireguard__publickey_server|d() %}
+{%         for publickey in hostvars[host_server].wireguard__publickey_server.results %}
+{%           if publickey.item == host_client %}
+      publickey: "{{ publickey.stdout }}",
+{%           endif %}
+{%         endfor %}
+{%       endif %}
+{%       if hostvars[host_server]|d() and hostvars[host_server].ansible_local|d() and hostvars[host_server].ansible_local.real_ip|d() %}
+      endpoint: "{{ hostvars[host_server].ansible_local.real_ip }}",
+{%       endif %}
+    }
+{%     endif %}
+{%   endfor %}
+{% endfor %}

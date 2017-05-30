@@ -1,0 +1,55 @@
+---
+
+wireguard__server: "{{ groups['service_wireguard_server'] }}"
+wireguard__client: "{{ groups['service_wireguard_client'] }}"
+wireguard__network: "172.16.35.0/22"
+wireguard__port: 1100
+wireguard__hostname: "{{ inventory_hostname }}"
+
+wireguard__headers_map:
+  'x86_64': "amd64"
+  'armv7l': "armmp-lpae"
+
+wireguard__real_ip: '{{ ansible_local.real_ip }}'
+
+
+wireguard__dependencies_ferm: True
+wireguard__ferm_dependent_rules:
+
+  - type: 'accept'
+    dport:
+      - '{{ wireguard__port }}'
+      - '1101'
+      - '1102'
+      - '1103'
+      - '1104'
+      - '1105'
+      - '1106'
+      - '1107'
+      - '1108'
+      - '1109'
+    protocol: [ 'udp' ]
+    role: 'le9i0nx.wireguard'
+    name: 'udp'
+    accept_any: True
+
+wireguard__dependencies_apt_preferences: '{{ ((ansible_distribution_release == "jessie") or (ansible_distribution_release == "stretch")) | bool }}'
+wireguard__apt_preferences__dependent_list:
+
+  - package: '*'
+    by_role: 'le9i0nx.wireguard'
+    priority: '50'
+    pin: 'release sid'
+
+  - package: 'wireguard-*'
+    by_role: 'le9i0nx.wireguard'
+    priority: '500'
+    pin: 'release sid'
+
+wireguard__dependencies_apt: '{{ (ansible_distribution_release == "jessie") | bool }}'
+wireguard__repositories:
+
+  - repo: 'deb http://deb.debian.org/debian unstable main contrib non-free'
+    mode: '0444'
+
+## vim: foldmethod=marker:tabstop=2:shiftwidth=2:softtabstop=2

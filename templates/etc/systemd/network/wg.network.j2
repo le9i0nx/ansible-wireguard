@@ -1,0 +1,9 @@
+# {{ ansible_managed }}
+[Match]
+Name={{ item.net }}
+
+[Network]
+{%  if item.ip|d() %}
+Address={{ item.ip }}
+{%  endif %}
+

@@ -1,0 +1,21 @@
+---
+
+- name: reload systemd
+  shell: systemctl daemon-reload
+
+- name: wireguard apply networkd configuration
+  service:
+    name: 'systemd-networkd'
+    state: 'restarted'
+    enabled: yes
+
+- name: wireguard restarted
+  service:
+    name: 'wireguard@{{ item.net }}'
+    state: 'restarted'
+  with_items: "{{ wireguard__wg_conf }}"
+  when: ((item.net is defined and item.net) and
+         (item.privatekey is defined and item.privatekey) and
+         (item.publickey is defined and item.publickey))
+
+## vim: foldmethod=marker:tabstop=2:shiftwidth=2:softtabstop=2

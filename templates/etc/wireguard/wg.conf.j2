@@ -1,0 +1,14 @@
+[Interface]
+PrivateKey={{ item.privatekey }}
+{% if item.listenport %}
+ListenPort={{ item.listenport }}
+{% endif %}
+
+[Peer]
+PublicKey={{ item.publickey }}
+{% if item.endpoint|d() and item.listenport|d() %}
+EndPoint={{ item.endpoint }}:{{ item.listenport }}
+PersistentKeepalive=10
+{% endif %}
+AllowedIPs=0.0.0.0/0,::/0
+

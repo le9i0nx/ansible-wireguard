@@ -1,0 +1,35 @@
+#!/usr/bin/env python
+
+# {{ ansible_managed }}
+from requests import get
+
+
+ip_get_list = [ 'http://ifconfig.co/ip','http://icanhazip.com','https://myexternalip.com/raw' ]
+
+response_list = []
+
+def analysis(lst):
+    dct ={}
+    for i in lst:
+        if i in dct:
+            dct[i] += 1
+        else:
+            dct[i] = 1
+    return dct
+
+try:
+    for ip_get in ip_get_list:
+        response = get("{}".format(ip_get)).text.strip("\n").encode('utf-8')
+        response_list.append(response)
+    out = analysis(response_list)
+    sorted_x = sorted(out, key=out.get, reverse=True)
+    if len(sorted_x) > 1:
+        if out[sorted_x[0]] == out[sorted_x[1]]:
+            print('""')
+        else:
+            print('"{}"'.format(sorted_x[0]))
+    else:
+        print('"{}"'.format(sorted_x[0]))
+except Exception:
+    print('""')
+
