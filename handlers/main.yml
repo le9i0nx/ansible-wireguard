@@ -13,6 +13,7 @@
   service:
     name: 'wireguard@{{ item.net }}'
     state: 'restarted'
+  no_log: True
   with_items: "{{ wireguard__wg_conf }}"
   when: ((item.net is defined and item.net) and
          (item.privatekey is defined and item.privatekey) and
