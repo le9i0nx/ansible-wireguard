@@ -9,6 +9,7 @@
     - 'linux-headers-{{ wireguard__headers_map[ansible_machine] }}'
     - 'wireguard-dkms'
     - 'wireguard-tools'
+    - 'python-requests'
 
 - name: Enable systemd-networkd
   service:
