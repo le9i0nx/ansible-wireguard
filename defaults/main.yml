@@ -46,7 +46,7 @@ wireguard__apt_preferences__dependent_list:
     priority: '500'
     pin: 'release sid'
 
-wireguard__dependencies_apt: '{{ (ansible_distribution_release == "jessie") | bool }}'
+wireguard__dependencies_apt: '{{ ((ansible_distribution_release == "jessie") or (ansible_distribution_release == "stretch")) | bool }}'
 wireguard__repositories:
 
   - repo: 'deb http://deb.debian.org/debian unstable main contrib non-free'

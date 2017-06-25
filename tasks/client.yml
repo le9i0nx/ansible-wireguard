@@ -25,6 +25,7 @@
   shell: cat "/etc/wireguard/wg_{{ item }}_{{ wireguard__hostname }}/publickey"
   register: wireguard__publickey_client
   changed_when: False
+  check_mode: no
   with_items: "{{ wireguard__server }}"
   when: wireguard__hostname in wireguard__client
 
@@ -32,6 +33,7 @@
   shell: cat "/etc/wireguard/wg_{{ item }}_{{ wireguard__hostname }}/privatekey"
   register: wireguard__privatekey_client
   changed_when: False
+  check_mode: no
   with_items: "{{ wireguard__server }}"
   when: wireguard__hostname in wireguard__client
 
