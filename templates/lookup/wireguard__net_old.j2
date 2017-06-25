@@ -1,0 +1,17 @@
+{% for host_server in wireguard__server %}
+{%   for host_client in wireguard__client %}
+  - { server: "{{ host_server }}",
+      client: "{{ host_client }}",
+{%     if hostvars[host_server]|d() and hostvars[host_server].ansible_local|d() and hostvars[host_server].ansible_local.wireguard_net|d() and hostvars[host_server].ansible_local.wireguard_net is not string %}
+{%       for item_net in hostvars[host_server].ansible_local.wireguard_net %}
+{%         if (item_net.subnet|d()) and (item_net.server == host_server) and (item_net.client == host_client) %}
+      subnet: "{{ item_net.subnet }}",
+{%         endif %}
+{%         if (item_net.listenport|d()) and (item_net.server == host_server) and (item_net.client == host_client) %}
+      listenport: "{{ item_net.listenport }}",
+{%         endif %}
+{%       endfor %}
+{%     endif %}
+    }
+{%   endfor %}
+{% endfor %}

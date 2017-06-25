@@ -1,12 +1,13 @@
 {% for host_server in wireguard__server %}
-{%   set number_net = loop.index - 1 %}
 {%   for host_client in wireguard__client %}
-{%     set number_net = number_net + loop.index - 1 %}
-{%     set port_net = number_net + wireguard__port %}
 {%     if wireguard__hostname == host_server %}
   - { net: "wg_{{ host_server }}_{{ host_client }}",
-      ip: "{{ wireguard__network | ipsubnet(30, number_net) | ipaddr('1') }}",
-      listenport: "{{ port_net }}",
+{%     for item_net in wireguard__net %}
+{%       if (item_net.server == host_server)  and (item_net.client == host_client) %}
+      ip: "{{ item_net.subnet | ipaddr('1') }}",
+      listenport: "{{ item_net.listenport }}",
+{%       endif %}
+{%     endfor %}
 {%       for privatekey in wireguard__privatekey_server.results %}
 {%         if privatekey.item == host_client %}
       privatekey: "{{ privatekey.stdout }}",
@@ -23,8 +24,12 @@
 {%     endif %}
 {%     if wireguard__hostname == host_client %}
   - { net: "wg_{{ host_server }}_{{ host_client }}",
-      ip: "{{ wireguard__network | ipsubnet(30, number_net) | ipaddr('2') }}",
-      listenport: "{{ port_net }}",
+{%     for item_net in wireguard__net %}
+{%       if (item_net.server == host_server)  and (item_net.client == host_client) %}
+      ip: "{{ item_net.subnet | ipaddr('2') }}",
+      listenport: "{{ item_net.listenport }}",
+{%       endif %}
+{%     endfor %}
 {%       for privatekey in wireguard__privatekey_client.results %}
 {%         if privatekey.item == host_server %}
       privatekey: "{{ privatekey.stdout }}",
