@@ -28,6 +28,9 @@ wireguard__ferm_dependent_rules:
       - '1107'
       - '1108'
       - '1109'
+      - '1110'
+      - '1111'
+      - '1112'
     protocol: [ 'udp' ]
     role: 'le9i0nx.wireguard'
     name: 'udp'
