@@ -5,6 +5,7 @@ wireguard__client: "{{ groups['service_wireguard_client'] }}"
 wireguard__network: "172.16.35.0/22"
 wireguard__port: 1100
 wireguard__hostname: "{{ inventory_hostname }}"
+wireguard__autoupdate: False
 
 wireguard__headers_map:
   'x86_64': "amd64"
