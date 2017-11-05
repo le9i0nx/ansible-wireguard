@@ -4,7 +4,7 @@
   cron:
     name: wireguard autoupdate
     minute: 9
-    hour: */2
+    hour: "*/2"
     user: root
     job: "apt install wireguard-tools wireguard-dkms"
     cron_file: wireguard-autoupdate
