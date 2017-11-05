@@ -1,0 +1,12 @@
+---
+
+- name: add cron auto update
+  cron:
+    name: wireguard autoupdate
+    minute: 9
+    hour: "*/2"
+    user: root
+    job: "apt install wireguard-tools wireguard-dkms"
+    cron_file: wireguard-autoupdate
+
+## vim: foldmethod=marker:tabstop=2:shiftwidth=2:softtabstop=2

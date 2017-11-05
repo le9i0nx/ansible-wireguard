@@ -1,6 +1,8 @@
 ---
 
 - include: install.yml
+- include: update.yml
+  when: wireguard__autoupdate|bool
 - include: server.yml
   no_log: True
 - include: client.yml
