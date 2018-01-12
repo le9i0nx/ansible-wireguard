@@ -1,4 +1,4 @@
-[![Ansible Galaxy](http://img.shields.io/badge/galaxy-le9i0nx.syncthing-660198.svg?style=flat)](https://galaxy.ansible.com/list#/roles/5258)
+[![Ansible Galaxy](https://img.shields.io/badge/galaxy-le9i0nx.wireguard-660198.svg?style=flat)](https://galaxy.ansible.com/le9i0nx/wireguard/)
 
 
 ### Installation
