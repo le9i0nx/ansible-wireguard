@@ -13,6 +13,9 @@ This role requires at least Ansible `v2.2.0`. To install it, run:
 
 [group_vars](docs/group_vars.md)
 
+[hosts](docs/hosts.md)
+
+
 ### Role dependencies
 
 ### Authors and license
